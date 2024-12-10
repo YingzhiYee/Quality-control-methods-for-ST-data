@@ -1,0 +1,29 @@
+name: Deploy to Main Server
+on:
+  push:
+    branches:
+      - main # Change to the branch that needs to be run
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+	- name: Checkout Code
+        uses: actions/ssh-action@v1.2.0
+
+      - name: executing remote ssh commands using password
+        uses: actions/ssh-action@v1.2.0
+	with:
+            host: “127.0.0.1” # change to vm ip
+            username: “AAA” # change to vm login username
+            password: “BBB” # change to vm password
+            port: “22” # change to vm port
+	script_stop: true # stop when error happened
+            script: |
+              sudo -u AAA bash -c '
+              cd /AAA/test-project
+              git pull origin main
+		cd SENSE
+		cd iqsignv2
+		npm install
+              npm run dev'
